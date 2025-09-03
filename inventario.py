@@ -111,7 +111,6 @@ def exportar_pdf():
 
 # -------- FUNCIONES DE INTERFAZ --------
 def mostrar_qr(qr_filename):
-    """Muestra el QR en una ventana emergente de Tkinter"""
     top = tk.Toplevel()
     top.title("Código QR generado")
     try:
@@ -167,11 +166,10 @@ def seleccionar_producto(event):
         entry_precio.insert(0, valores[4])
 
 def abrir_qr(event):
-    """Cuando haga doble clic en la columna QR, mostrar imagen"""
     item = tree.selection()
     if item:
         valores = tree.item(item, "values")
-        qr_filename = valores[5]  # la columna QR
+        qr_filename = valores[5]
         mostrar_qr(qr_filename)
 
 def eliminar_seleccionado():
@@ -207,73 +205,75 @@ def limpiar_formulario():
     entry_cantidad.delete(0, tk.END)
     entry_precio.delete(0, tk.END)
 
-# -------- INTERFAZ --------
-ventana = tk.Tk()
-ventana.title("Inventario con MySQL + QR")
-ventana.geometry("950x600")
-ventana.configure(bg="#f4f4f9")
+# -------- FUNCIÓN PRINCIPAL --------
+def iniciar_app():
+    global ventana, entry_id, entry_nombre, entry_categoria, entry_cantidad, entry_precio, tree
+    ventana = tk.Tk()
+    ventana.title("Inventario con MySQL + QR")
+    ventana.geometry("950x600")
+    ventana.configure(bg="#f4f4f9")
 
-style = ttk.Style()
-style.theme_use("clam")
-style.configure("Treeview", background="#ffffff", foreground="black",
-                rowheight=25, fieldbackground="#e6f0ff")
-style.map("Treeview", background=[("selected", "#4a90e2")])
+    style = ttk.Style()
+    style.theme_use("clam")
+    style.configure("Treeview", background="#ffffff", foreground="black",
+                    rowheight=25, fieldbackground="#e6f0ff")
+    style.map("Treeview", background=[("selected", "#4a90e2")])
 
-# -------- FORMULARIO --------
-frame_form = tk.LabelFrame(ventana, text="Gestión de Productos", bg="#f4f4f9", font=("Arial", 12, "bold"))
-frame_form.pack(pady=10, padx=10, fill="x")
+    # -------- FORMULARIO --------
+    frame_form = tk.LabelFrame(ventana, text="Gestión de Productos", bg="#f4f4f9", font=("Arial", 12, "bold"))
+    frame_form.pack(pady=10, padx=10, fill="x")
 
-tk.Label(frame_form, text="ID:", bg="#f4f4f9").grid(row=0, column=0, padx=5, pady=5)
-entry_id = tk.Entry(frame_form, state="readonly")
-entry_id.grid(row=0, column=1, padx=5, pady=5)
+    tk.Label(frame_form, text="ID:", bg="#f4f4f9").grid(row=0, column=0, padx=5, pady=5)
+    entry_id = tk.Entry(frame_form, state="readonly")
+    entry_id.grid(row=0, column=1, padx=5, pady=5)
 
-tk.Label(frame_form, text="Nombre:", bg="#f4f4f9").grid(row=1, column=0, padx=5, pady=5)
-entry_nombre = tk.Entry(frame_form)
-entry_nombre.grid(row=1, column=1, padx=5, pady=5)
+    tk.Label(frame_form, text="Nombre:", bg="#f4f4f9").grid(row=1, column=0, padx=5, pady=5)
+    entry_nombre = tk.Entry(frame_form)
+    entry_nombre.grid(row=1, column=1, padx=5, pady=5)
 
-tk.Label(frame_form, text="Categoría:", bg="#f4f4f9").grid(row=2, column=0, padx=5, pady=5)
-entry_categoria = tk.Entry(frame_form)
-entry_categoria.grid(row=2, column=1, padx=5, pady=5)
+    tk.Label(frame_form, text="Categoría:", bg="#f4f4f9").grid(row=2, column=0, padx=5, pady=5)
+    entry_categoria = tk.Entry(frame_form)
+    entry_categoria.grid(row=2, column=1, padx=5, pady=5)
 
-tk.Label(frame_form, text="Cantidad:", bg="#f4f4f9").grid(row=3, column=0, padx=5, pady=5)
-entry_cantidad = tk.Entry(frame_form)
-entry_cantidad.grid(row=3, column=1, padx=5, pady=5)
+    tk.Label(frame_form, text="Cantidad:", bg="#f4f4f9").grid(row=3, column=0, padx=5, pady=5)
+    entry_cantidad = tk.Entry(frame_form)
+    entry_cantidad.grid(row=3, column=1, padx=5, pady=5)
 
-tk.Label(frame_form, text="Precio:", bg="#f4f4f9").grid(row=4, column=0, padx=5, pady=5)
-entry_precio = tk.Entry(frame_form)
-entry_precio.grid(row=4, column=1, padx=5, pady=5)
+    tk.Label(frame_form, text="Precio:", bg="#f4f4f9").grid(row=4, column=0, padx=5, pady=5)
+    entry_precio = tk.Entry(frame_form)
+    entry_precio.grid(row=4, column=1, padx=5, pady=5)
 
-btn_frame = tk.Frame(frame_form, bg="#f4f4f9")
-btn_frame.grid(row=5, column=0, columnspan=2, pady=10)
+    btn_frame = tk.Frame(frame_form, bg="#f4f4f9")
+    btn_frame.grid(row=5, column=0, columnspan=2, pady=10)
 
-ttk.Button(btn_frame, text="Agregar", command=agregar_producto).grid(row=0, column=0, padx=5)
-ttk.Button(btn_frame, text="Modificar", command=modificar_producto).grid(row=0, column=1, padx=5)
-ttk.Button(btn_frame, text="Eliminar", command=eliminar_seleccionado).grid(row=0, column=2, padx=5)
-ttk.Button(btn_frame, text="Limpiar", command=limpiar_formulario).grid(row=0, column=3, padx=5)
+    ttk.Button(btn_frame, text="Agregar", command=agregar_producto).grid(row=0, column=0, padx=5)
+    ttk.Button(btn_frame, text="Modificar", command=modificar_producto).grid(row=0, column=1, padx=5)
+    ttk.Button(btn_frame, text="Eliminar", command=eliminar_seleccionado).grid(row=0, column=2, padx=5)
+    ttk.Button(btn_frame, text="Limpiar", command=limpiar_formulario).grid(row=0, column=3, padx=5)
 
-# -------- BOTONES EXPORTACIÓN --------
-frame_export = tk.Frame(ventana, bg="#f4f4f9")
-frame_export.pack(pady=10)
+    # -------- BOTONES EXPORTACIÓN --------
+    frame_export = tk.Frame(ventana, bg="#f4f4f9")
+    frame_export.pack(pady=10)
 
-btn_excel = tk.Button(frame_export, text="Exportar a Excel", bg="#2ecc71", fg="white", command=exportar_excel)
-btn_excel.grid(row=0, column=0, padx=10)
+    btn_excel = tk.Button(frame_export, text="Exportar a Excel", bg="#2ecc71", fg="white", command=exportar_excel)
+    btn_excel.grid(row=0, column=0, padx=10)
 
-btn_pdf = tk.Button(frame_export, text="Exportar a PDF", bg="#e74c3c", fg="white", command=exportar_pdf)
-btn_pdf.grid(row=0, column=1, padx=10)
+    btn_pdf = tk.Button(frame_export, text="Exportar a PDF", bg="#e74c3c", fg="white", command=exportar_pdf)
+    btn_pdf.grid(row=0, column=1, padx=10)
 
-# -------- TABLA --------
-tree_frame = tk.Frame(ventana, bg="#f4f4f9")
-tree_frame.pack(pady=10, padx=10, fill="both", expand=True)
+    # -------- TABLA --------
+    tree_frame = tk.Frame(ventana, bg="#f4f4f9")
+    tree_frame.pack(pady=10, padx=10, fill="both", expand=True)
 
-tree = ttk.Treeview(tree_frame, columns=("ID", "Nombre", "Categoría", "Cantidad", "Precio", "QR"), show="headings")
-tree.pack(fill="both", expand=True)
+    tree = ttk.Treeview(tree_frame, columns=("ID", "Nombre", "Categoría", "Cantidad", "Precio", "QR"), show="headings")
+    tree.pack(fill="both", expand=True)
 
-for col in ("ID", "Nombre", "Categoría", "Cantidad", "Precio", "QR"):
-    tree.heading(col, text=col)
+    for col in ("ID", "Nombre", "Categoría", "Cantidad", "Precio", "QR"):
+        tree.heading(col, text=col)
 
-tree.bind("<ButtonRelease-1>", seleccionar_producto)
-tree.bind("<Double-1>", abrir_qr)  # doble clic muestra el QR
+    tree.bind("<ButtonRelease-1>", seleccionar_producto)
+    tree.bind("<Double-1>", abrir_qr)
 
-# -------- INICIAR --------
-actualizar_lista()
-ventana.mainloop()
+    # -------- INICIAR --------
+    actualizar_lista()
+    ventana.mainloop()
